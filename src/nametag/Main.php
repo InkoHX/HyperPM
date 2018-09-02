@@ -21,7 +21,7 @@ class Main extends PluginBase implements Listener {
             if($changePlayer instanceof NameTag) {
                 $add = new AddPlayerPacket();
                 $add->uuid = $packet->uuid;
-                $add->username = $changePlayer->getTag().$packet->username;
+                $add->username = $changePlayer->getTag().$changePlayer->getOriginalNameTag();
                 $add->entityRuntimeId = $packet->entityRuntimeId;
                 $add->position = $packet->position;
                 $add->motion = $packet->motion;
@@ -31,6 +31,7 @@ class Main extends PluginBase implements Listener {
                 $add->metadata = $packet->metadata;
                 $player->dataPacket($add);
 
+                $changePlayer->updateOriginalNameTag($packet->username);
                 //多分動かない
                 /*$packet->username = $changePlayer->getTag().$packet->username;
                 $player->dataPacket($packet);*/
