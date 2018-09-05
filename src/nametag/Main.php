@@ -2,56 +2,15 @@
 
 namespace nametag;
 
-class Main extends PluginBase implements Listener {
+use pocketmine\plugin\PluginBase;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerCreationEvent;
 
-    public static $sessions = [];
+class Main extends PluginBase implements Listener {
 
     public function onEnable() {};
 
-    public function onLogin(PlayerLoginEvent $event) {
-        $player = $event->getPlayer();
-        self::createSession($player);
+    public function onCreation(PlayerCreationEvent $event) {
+        $event->setPlayerClass(Session::class);
     }
-
-    public function onSendPacket(DataPacketSendEvent $event) {
-        $player = $event->getPlayer();
-        $packet = $event->getPacket();
-        if($packet instanceof AddPlayerPacket) {
-            $changePlayer = self::getSessionByUUID($packet->uuid);
-            if($changePlayer instanceof NameTag) {
-                $add = new AddPlayerPacket();
-                $add->uuid = $packet->uuid;
-                $add->username = $changePlayer->getTag().$changePlayer->getOriginalNameTag();
-                $add->entityRuntimeId = $packet->entityRuntimeId;
-                $add->position = $packet->position;
-                $add->motion = $packet->motion;
-                $add->yaw = $packet->yaw;
-                $add->pitch = $packet->pitch;
-                $add->item = $packet->item;
-                $add->metadata = $packet->metadata;
-                $player->dataPacket($add);
-
-                $changePlayer->updateOriginalNameTag($packet->username);
-                //多分動かない
-                /*$packet->username = $changePlayer->getTag().$packet->username;
-                $player->dataPacket($packet);*/
-            }
-        }
-    }
-
-    public static function createSession(Player $player) {
-        self::$sessions[$player->getName()] = new NameTag($player);
-    }
-
-    public static function getSessionByUUID(UUID $uuid) {
-        $player = Server::getInstance()->getPlayerByUUID($uuid);
-        if($player instanceof Player) {
-            return self::getSessionByPlayer($player);
-        }
-        return null;
-    }
-
-    public static function getSessionByPlayer(Player $player){
-        if(empty(self::$sessions[$player->getName()])) return null;
-        return self::$sessions[$player->getName()];
-    }
+}
