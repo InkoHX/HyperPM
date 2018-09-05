@@ -8,7 +8,9 @@ use pocketmine\event\player\PlayerCreationEvent;
 
 class Main extends PluginBase implements Listener {
 
-    public function onEnable() {};
+    public function onEnable() {
+        $this->getServer()->getPluginManager()->registerEvents($this,$this);
+    }
 
     public function onCreation(PlayerCreationEvent $event) {
         $event->setPlayerClass(Session::class);
