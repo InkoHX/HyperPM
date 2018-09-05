@@ -16,7 +16,7 @@ class Session extends Player {
 
         $pk = new SetEntityDataPacket();
         $pk->entityRuntimeId = $this->getId();
-        $pk->metadata = $data ?? $this->propertyManager->getAll();
+        $pk->metadata = $data ?? $this->getDataPropertyManager()->getAll();
 
         // Temporary fix for player custom name tags visible
         $includeNametag = isset($data[self::DATA_NAMETAG]);
@@ -32,7 +32,7 @@ class Session extends Player {
             $add->yaw = $this->yaw;
             $add->pitch = $this->pitch;
             $add->item = $this->getInventory()->getItemInHand();
-            $add->metadata = $this->propertyManager->getAll();
+            $add->metadata = $this->getDataPropertyManager()->getAll();
         }
 
         foreach($player as $p){
