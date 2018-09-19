@@ -29,7 +29,7 @@ class Main extends PluginBase implements Listener {
     }
 
     public function onLevelChange(EntityLevelChangeEvent $event) {
-    	EntityBase::switchLevel($event);
+    	//EntityBase::switchLevel($event);
     }
 
     public function onRecievePacket(DataPacketReceiveEvent $event){

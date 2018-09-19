@@ -151,10 +151,10 @@ class EntityBase {
 
     public static function switchLevel(EntityLevelChangeEvent $ev) :void{
     	$player = $ev->getPlayer();
-    	foreach (self::getEntitiesByLevel($ev->getFrom()) as $key => $entity) {
+    	foreach (self::getEntitiesByLevel($ev->getOrigin()) as $key => $entity) {
     		$entity->despawnFrom($player);
     	}
-    	foreach (self::getEntitiesByLevel($ev->getTo()) as $key => $entity) {
+    	foreach (self::getEntitiesByLevel($ev->getTarget()) as $key => $entity) {
     		$entity->spawnTo($player);
     	}
     }
