@@ -1,13 +1,28 @@
 <?php
 
-namespace nametag;
+namespace PocketMineAPI;
 
 use pocketmine\Player;
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 
-class Session extends Player {
+class PlayerSession extends Player {
+
+	public const OS_ANDROID = 1;
+    public const OS_IOS = 2;
+    public const OS_MAC = 3;
+    public const OS_FIREOS = 4;
+    public const OS_GEARVR = 5;
+    public const OS_HOLOLENS = 6;
+    public const OS_WINDOWS = 7;
+    public const OS_WIN32 = 8;
+    public const OS_DEDICATED = 9;
+    public const OS_ORBIS = 10;
+    public const OS_NX = 11;
+
+	public $deviceModel;
+	public $deviceOS;
 
     public function sendData($player, ?array $data = \null) : void{
         if(!\is_array($player)){
@@ -50,5 +65,13 @@ class Session extends Player {
         if($this instanceof Player){
             $this->dataPacket($pk);
         }
+    }
+
+    public function getDeviceModel() {
+        return $this->deviceModel;
+    }
+
+    public function getDeviceOS() {
+        return $this->deviceOS;
     }
 }
