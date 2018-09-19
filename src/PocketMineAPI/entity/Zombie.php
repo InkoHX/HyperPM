@@ -9,16 +9,6 @@ use pocketmine\network\mcpe\protocol\AddEntityPacket;
 
 class Zombie extends EntityBase {
 
-	public function __construct(Position $position, float $yaw = 0.0, float $pitch = 0.0) {
-		parent::__construct($position, $yaw, $pitch);
-
-		$this->name = "Zombie";
-	}
-
-	public function interact(Player $player) {
-		$player->sendMessage("gggagagagag");
-	}
-
 	public function spawnTo(Player $player) :bool{
 		if(parent::spawnTo($player)) {
 			$pk = new AddEntityPacket();
