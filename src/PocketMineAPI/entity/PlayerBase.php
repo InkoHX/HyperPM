@@ -6,7 +6,6 @@ use pocketmine\Server;
 use pocketmine\Player;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Skin;
-use pocketmine\item\Item;
 use pocketmine\utils\UUID;
 use pocketmine\level\Position;
 
@@ -28,30 +27,11 @@ class PlayerBase extends EntityBase {
 		$this->skin = new Skin("","","","","");
 		$this->uuid = UUID::fromRandom();
 
-		$this->iteminhand = Item::get(0);
-		$this->iteminoffhand = Item::get(0);
-
 		$this->sendSkin();
 	}
 
 	public function getUniqueId() {
         return $this->uuid;
-    }
-
-    public function setItemInHand(Item $item) {
-        $this->iteminhand = $item;
-    }
-
-    public function getItemInHand() : Item{
-        return $this->iteminhand;
-    }
-
-    public function setItemInOffHand(Item $item) {
-        $this->iteminoffhand = $item;
-    }
-
-    public function getItemInOffHand() : Item{
-        return $this->iteminoffhand;
     }
 
     public function setSkin(Skin $skin) {

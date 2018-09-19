@@ -5,15 +5,18 @@ namespace PocketMineAPI\entity;
 use pocketmine\Server;
 use pocketmine\Player;
 use pocketmine\entity\Entity;
+use pocketmine\entity\EntityIds;
 use pocketmine\entity\DataPropertyManager;
 use pocketmine\level\Position;
+use pocketmine\level\Level;
 use pocketmine\math\Vector3;
+use pocketmine\item\Item;
 
 use pocketmine\event\entity\EntityLevelChangeEvent;
 
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 
-class EntityBase {
+class EntityBase implements EntityIds{
 
 	protected static $entries = [];
 
@@ -51,6 +54,9 @@ class EntityBase {
         $this->pitch = $pitch;
         $this->motion = new Vector3(0,0,0);
 
+        $this->iteminhand = Item::get(0);
+        $this->iteminoffhand = Item::get(0);
+
         self::$entries[$this->level->getName()][$this->getId()] = $this;
     }
 
@@ -68,6 +74,22 @@ class EntityBase {
 
     public function getMotion() :Vector3{
         return $this->motion;
+    }
+
+    public function setItemInHand(Item $item) {
+        $this->iteminhand = $item;
+    }
+
+    public function getItemInHand() : Item{
+        return $this->iteminhand;
+    }
+
+    public function setItemInOffHand(Item $item) {
+        $this->iteminoffhand = $item;
+    }
+
+    public function getItemInOffHand() : Item{
+        return $this->iteminoffhand;
     }
 
     public function setDataFlag(int $propertyId, int $flagId, bool $value = true, int $propertyType = Entity::DATA_TYPE_LONG){
@@ -89,9 +111,9 @@ class EntityBase {
     }
 
     public function spawnTo(Player $player) :bool{
-    	if($this->level->getEntitiy($player->getId()) == null) {
+    	/*if($this->level->getEntity($player->getId()) == null) {
     		return false;
-    	}
+    	}*/
 
     	$this->hasSpawned[$player->getId()] = $player;
     	return true;
