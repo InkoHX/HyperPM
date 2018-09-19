@@ -2,10 +2,15 @@
 
 namespace PocketMineAPI;
 
+use pocketmine\Server;
 use pocketmine\Player;
+use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
+use pocketmine\network\mcpe\protocol\types\ContainerIds;
+
+use PocketMineAPI\inventory\PlayerOffHandInventory;
 
 class PlayerSession extends Player {
 
@@ -23,6 +28,22 @@ class PlayerSession extends Player {
 
 	public $deviceModel;
 	public $deviceOS;
+
+	public function __construct(Server $server, NetworkSession $session){
+		parent::__construct($server, $session);
+		$this->offHandInventory = new PlayerOffHandInventory($this);
+	}
+
+	public function getOffHandInventory() : PlayerOffHandInventory{
+        return $this->offHandInventory;
+    }
+
+    protected function addDefaultWindows(){
+        parent::addDefaultWindows();
+
+        $this->offHandInventory = new PlayerOffHandInventory($this);
+        $this->addWindow($this->offHandInventory, ContainerIds::OFFHAND, true);
+    }
 
     public function sendData($player, ?array $data = \null) : void{
         if(!\is_array($player)){

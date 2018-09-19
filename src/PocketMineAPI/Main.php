@@ -2,8 +2,6 @@
 
 namespace PocketMineAPI;
 
-use pocketmine\PocketMine;
-
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerCreationEvent;
@@ -17,10 +15,6 @@ use PocketMineAPI\entity\EntityBase;
 class Main extends PluginBase implements Listener {
 
     public function onEnable() {
-    	if(PocketMine::NAME != "PocketMine-MP") {
-    		$this->getServer()->getLogger()->info("§c[PlayerHelper] PocketMine-MPのみこのプラグインは読み込まれます。");
-    		return false;
-    	}
         $this->getServer()->getPluginManager()->registerEvents($this,$this);
     }
 
