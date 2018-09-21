@@ -7,13 +7,13 @@ use pocketmine\level\Position;
 
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 
-class Creeper extends EntityBase {
+class Villager extends EntityBase {
 
     public function spawnTo(Player $player) :bool{
         if(parent::spawnTo($player)) {
             $pk = new AddEntityPacket();
             $pk->entityRuntimeId = $this->getId();
-            $pk->type = self::CREEPER;
+            $pk->type = self::VILLAGER;
             $pk->position = $this->asVector3();
             $pk->motion = $this->getMotion();
             $pk->pitch = $this->pitch;
@@ -21,6 +21,7 @@ class Creeper extends EntityBase {
             $pk->headYaw = $this->headYaw;
             $pk->metadata = $this->propertyManager->getAll();
             $player->dataPacket($pk);
+            return false;
         }
         return true;
     }

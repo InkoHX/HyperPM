@@ -33,81 +33,81 @@ use pocketmine\Player;
 use pocketmine\inventory\BaseInventory;
 
 class PlayerOffHandInventory extends BaseInventory{
-	/** @var Player */
-	protected $holder;
+    /** @var Player */
+    protected $holder;
 
-	public function __construct(Player $holder){
-		$this->holder = $holder;
-		parent::__construct();
-	}
+    public function __construct(Player $holder){
+        $this->holder = $holder;
+        parent::__construct();
+    }
 
-	public function getName() : string{
-		return "OffHand";
-	}
+    public function getName() : string{
+        return "OffHand";
+    }
 
-	public function getDefaultSize() : int{
-		return 1;
-	}
+    public function getDefaultSize() : int{
+        return 1;
+    }
 
-	public function getHolder() : Player{
-		return $this->holder;
-	}
+    public function getHolder() : Player{
+        return $this->holder;
+    }
 
-	public function setOffHand(Item $item) : void{
-		$this->setItem(0, $item);
-	}
+    public function setOffHand(Item $item) : void{
+        $this->setItem(0, $item);
+    }
 
-	public function setSize(int $size){
-		throw new \BadMethodCallException("OffHand can only carry one item at a time");
-	}
+    public function setSize(int $size){
+        throw new \BadMethodCallException("OffHand can only carry one item at a time");
+    }
 
-	public function sendSlot(int $index, $target) : void{
-		if($target instanceof Player){
-			$target = [$target];
-		}
+    public function sendSlot(int $index, $target) : void{
+        if($target instanceof Player){
+            $target = [$target];
+        }
 
-		/** @var Player[] $target */
+        /** @var Player[] $target */
 
-		if(($k = array_search($this->holder, $target, true)) !== false){
-			$pk = new InventorySlotPacket();
-			$pk->windowId = $target[$k]->getWindowId($this);
-			$pk->inventorySlot = $index;
-			$pk->item = $this->getItem($index);
-			$target[$k]->sendDataPacket($pk);
-			unset($target[$k]);
-		}
-		if(!empty($target)){
-			$pk = new MobEquipmentPacket();
-			$pk->entityRuntimeId = $this->getHolder()->getId();
-			$pk->inventorySlot = $pk->hotbarSlot = $this->getItem($index);
-			$this->holder->getLevel()->getServer()->broadcastPacket($target, $pk);
-		}
-	}
+        if(($k = array_search($this->holder, $target, true)) !== false){
+            $pk = new InventorySlotPacket();
+            $pk->windowId = $target[$k]->getWindowId($this);
+            $pk->inventorySlot = $index;
+            $pk->item = $this->getItem($index);
+            $target[$k]->sendDataPacket($pk);
+            unset($target[$k]);
+        }
+        if(!empty($target)){
+            $pk = new MobEquipmentPacket();
+            $pk->entityRuntimeId = $this->getHolder()->getId();
+            $pk->inventorySlot = $pk->hotbarSlot = $this->getItem($index);
+            $this->holder->getLevel()->getServer()->broadcastPacket($target, $pk);
+        }
+    }
 
-	public function sendContents($target) : void{
-		if($target instanceof Player){
-			$target = [$target];
-		}
+    public function sendContents($target) : void{
+        if($target instanceof Player){
+            $target = [$target];
+        }
 
-		if(($k = array_search($this->holder, $target, true)) !== false){
-			$pk = new InventoryContentPacket();
-			$pk->windowId = $target[$k]->getWindowId($this);
-			$pk->items = $this->getContents(true);
-			$target[$k]->sendDataPacket($pk);
-			unset($target[$k]);
-		}
-		if(!empty($target)){
-			$pk = new MobEquipmentPacket();
-			$pk->entityRuntimeId = $this->getHolder()->getId();
-			$pk->inventorySlot = $pk->hotbarSlot = $this->getItem(0);
-			$this->holder->getLevel()->getServer()->broadcastPacket($target, $pk);
-		}
-	}
+        if(($k = array_search($this->holder, $target, true)) !== false){
+            $pk = new InventoryContentPacket();
+            $pk->windowId = $target[$k]->getWindowId($this);
+            $pk->items = $this->getContents(true);
+            $target[$k]->sendDataPacket($pk);
+            unset($target[$k]);
+        }
+        if(!empty($target)){
+            $pk = new MobEquipmentPacket();
+            $pk->entityRuntimeId = $this->getHolder()->getId();
+            $pk->inventorySlot = $pk->hotbarSlot = $this->getItem(0);
+            $this->holder->getLevel()->getServer()->broadcastPacket($target, $pk);
+        }
+    }
 
-	/**
-	 * @return Player[]
-	 */
-	public function getViewers() : array{
-		return array_merge(parent::getViewers(), $this->holder->getViewers());
-	}
+    /**
+     * @return Player[]
+     */
+    public function getViewers() : array{
+        return array_merge(parent::getViewers(), $this->holder->getViewers());
+    }
 }

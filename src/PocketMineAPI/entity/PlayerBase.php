@@ -16,21 +16,21 @@ use pocketmine\network\mcpe\protocol\types\PlayerListEntry;
 
 class PlayerBase extends EntityBase {
 
-	protected $skin;
-	protected $uuid;
-	protected $iteminhand;
-	protected $iteminoffhand;
+    protected $skin;
+    protected $uuid;
+    protected $iteminhand;
+    protected $iteminoffhand;
 
-	public function __construct(Position $position, float $yaw = 0.0, float $pitch = 0.0) {
-		parent::__construct($position, $yaw, $pitch);
+    public function __construct(Position $position, float $yaw = 0.0, float $pitch = 0.0) {
+        parent::__construct($position, $yaw, $pitch);
 
-		$this->skin = new Skin("","","","","");
-		$this->uuid = UUID::fromRandom();
+        $this->skin = new Skin("","","","","");
+        $this->uuid = UUID::fromRandom();
 
-		$this->sendSkin();
-	}
+        $this->sendSkin();
+    }
 
-	public function getUniqueId() {
+    public function getUniqueId() {
         return $this->uuid;
     }
 

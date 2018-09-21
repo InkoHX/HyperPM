@@ -14,7 +14,7 @@ use PocketMineAPI\inventory\PlayerOffHandInventory;
 
 class PlayerSession extends Player {
 
-	public const OS_ANDROID = 1;
+    public const OS_ANDROID = 1;
     public const OS_IOS = 2;
     public const OS_MAC = 3;
     public const OS_FIREOS = 4;
@@ -26,15 +26,15 @@ class PlayerSession extends Player {
     public const OS_ORBIS = 10;
     public const OS_NX = 11;
 
-	public $deviceModel;
-	public $deviceOS;
+    public $deviceModel;
+    public $deviceOS;
 
-	public function __construct(Server $server, NetworkSession $session){
-		parent::__construct($server, $session);
-		$this->offHandInventory = new PlayerOffHandInventory($this);
-	}
+    public function __construct(Server $server, NetworkSession $session){
+        parent::__construct($server, $session);
+        $this->offHandInventory = new PlayerOffHandInventory($this);
+    }
 
-	public function getOffHandInventory() : PlayerOffHandInventory{
+    public function getOffHandInventory() : PlayerOffHandInventory{
         return $this->offHandInventory;
     }
 

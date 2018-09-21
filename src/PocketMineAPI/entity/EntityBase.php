@@ -18,11 +18,11 @@ use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 
 class EntityBase implements EntityIds{
 
-	protected static $entries = [];
+    protected static $entries = [];
 
-	protected $hasSpawned = [];
+    protected $hasSpawned = [];
 
-	protected $id;
+    protected $id;
     protected $pos;
     protected $motion;
 
@@ -36,9 +36,9 @@ class EntityBase implements EntityIds{
     public $name = "";
 
     public function __construct(Position $position, float $yaw = 0.0, float $pitch = 0.0) {
-    	$this->id = Entity::$entityCount++;
+        $this->id = Entity::$entityCount++;
 
-    	$this->propertyManager = new DataPropertyManager();
+        $this->propertyManager = new DataPropertyManager();
         $this->propertyManager->setLong(Entity::DATA_FLAGS, 0);
         $this->propertyManager->setShort(Entity::DATA_MAX_AIR, 400);
         $this->propertyManager->setString(Entity::DATA_NAMETAG, "");
@@ -61,11 +61,15 @@ class EntityBase implements EntityIds{
     }
 
     public function getId() :int{
-    	return $this->id;
+        return $this->id;
     }
 
     public function getName() :string{
-    	return $this->name;
+        return $this->name;
+    }
+
+    public function getLevel() :Level{
+        return $this->level;
     }
 
     public function asVector3() :Vector3{
@@ -111,12 +115,12 @@ class EntityBase implements EntityIds{
     }
 
     public function spawnTo(Player $player) :bool{
-    	/*if($this->level->getEntity($player->getId()) == null) {
-    		return false;
-    	}*/
+        /*if($this->level->getEntity($player->getId()) == null) {
+            return false;
+        }*/
 
-    	$this->hasSpawned[$player->getId()] = $player;
-    	return true;
+        $this->hasSpawned[$player->getId()] = $player;
+        return true;
     }
 
     public function despawnFromAll() :void{
@@ -134,50 +138,57 @@ class EntityBase implements EntityIds{
     }
 
     public function hasSpawned(Player $player) {
-    	if(isset($this->hasSpawned[$player->getId()])) {
-    		return true;
-    	}
-    	return false;
+        if(isset($this->hasSpawned[$player->getId()])) {
+            return true;
+        }
+        return false;
     }
 
     public function interact(Player $player) {
-    	return false;
+        return false;
     }
 
     public static function getEntity(Level $level, int $id) {
-    	if(isset(self::$entries[$level->getName()])) {
-    		if(isset(self::$entries[$level->getName()][$id])) {
-    			return self::$entries[$level->getName()][$id];
-    		}
-    	}
-    	return null;
+        if(isset(self::$entries[$level->getName()])) {
+            if(isset(self::$entries[$level->getName()][$id])) {
+                return self::$entries[$level->getName()][$id];
+            }
+        }
+        return null;
     }
 
     public static function getEntityById(int $id) {
-    	foreach (self::$entries as $level => $aaa) {
-    		if(isset($aaa[$id])) {
-    			return $aaa[$id];
-    		}
-    	}
-    	return null;
+        foreach (self::$entries as $level => $aaa) {
+            if(isset($aaa[$id])) {
+                return $aaa[$id];
+            }
+        }
+        return null;
     }
 
     public static function getEntitiesByLevel(Level $level) {
-    	$d = [];
-    	foreach(self::$entries[$level->getName()] as $id => $entity) {
-    		$d[] = $entity;
-    	}
-
-    	return $d;
+        $d = [];
+        if(self::isExistenceEntity($level)) {
+            foreach(self::$entries[$level->getName()] as $id => $entity) {
+                $d[] = $entity;
+            }
+        }
+        return $d;
     }
 
     public static function switchLevel(EntityLevelChangeEvent $ev) :void{
-    	$player = $ev->getPlayer();
-    	foreach (self::getEntitiesByLevel($ev->getOrigin()) as $key => $entity) {
-    		$entity->despawnFrom($player);
-    	}
-    	foreach (self::getEntitiesByLevel($ev->getTarget()) as $key => $entity) {
-    		$entity->spawnTo($player);
-    	}
+        $player = $ev->getEntity();
+        if($player instanceof Player) {
+            foreach (self::getEntitiesByLevel($ev->getOrigin()) as $key => $entity) {
+                $entity->despawnFrom($player);
+            }
+            foreach (self::getEntitiesByLevel($ev->getTarget()) as $key => $entity) {
+                $entity->spawnTo($player);
+            }
+        }
+    }
+
+    public static function isExistenceEntity(Level $level) {
+        return isset(self::$entries[$level->getName()]);
     }
 }

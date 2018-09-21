@@ -21,6 +21,7 @@ class Zombie extends EntityBase {
 			$pk->headYaw = $this->headYaw;
 			$pk->metadata = $this->propertyManager->getAll();
 			$player->dataPacket($pk);
+			return false;
 		}
 		return true;
 	}

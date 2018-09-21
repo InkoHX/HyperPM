@@ -20,20 +20,24 @@ use PocketMineAPI\entity\EntryEntity;
 
 class Main extends PluginBase implements Listener {
 
+    public const ENABLE_CREATION = false;
+
     public function onEnable() {
         $this->getServer()->getPluginManager()->registerEvents($this,$this);
     }
 
     public function onCreation(PlayerCreationEvent $event) {
-        $event->setPlayerClass(PlayerSession::class);
+        if(self::ENABLE_CREATION) {
+            $event->setPlayerClass(PlayerSession::class);
+        }
     }
 
     public function onJoin(PlayerJoinEvent $event) {
-    	EntryEntity::spawnToEntryEntity($event->getPlayer());
+        EntryEntity::spawnToEntryEntity($event->getPlayer());
     }
 
     public function onLevelChange(EntityLevelChangeEvent $event) {
-    	//EntityBase::switchLevel($event);
+        EntityBase::switchLevel($event);
     }
 
     public function onRecievePacket(DataPacketReceiveEvent $event){
@@ -43,13 +47,13 @@ class Main extends PluginBase implements Listener {
             $player->deviceModel = $packet->clientData["DeviceModel"];
             $player->deviceOS = $packet->clientData["DeviceOS"];
         }elseif($packet instanceof InventoryTransactionPacket){
-        	$transactionData = $packet->trData;
-        	if($packet->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY) {
-        		$entity = EntityBase::getEntity($player->getLevel(), $transactionData->entityRuntimeId);
-        		if($entity instanceof EntityBase) {
-        			$entity->interact($player);
-        		}
-        	}
+            $transactionData = $packet->trData;
+            if($packet->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY) {
+                $entity = EntityBase::getEntity($player->getLevel(), $transactionData->entityRuntimeId);
+                if($entity instanceof EntityBase) {
+                    $entity->interact($player);
+                }
+            }
         }
     }
 }
