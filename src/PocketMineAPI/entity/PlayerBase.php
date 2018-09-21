@@ -9,6 +9,7 @@ use pocketmine\entity\Skin;
 use pocketmine\utils\UUID;
 use pocketmine\level\Position;
 
+use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\PlayerSkinPacket;
 use pocketmine\network\mcpe\protocol\PlayerListPacket;
@@ -47,6 +48,31 @@ class PlayerBase extends EntityBase {
         $pk->uuid = $this->getUniqueId();
         $pk->skin = $this->getSkin();
         Server::getInstance()->broadcastPacket($targets ?? Server::getInstance()->getOnlinePlayers(), $pk);
+    }
+
+    public function setNameTag(string $name) {
+        parent::setNameTag($name);
+        $this->updateData();
+    }
+
+    public function updateData() : void{
+        parent::updateData();
+
+        $remove = new RemoveEntityPacket();
+        $remove->entityUniqueId = $this->getId();
+        $add = new AddPlayerPacket();
+        $add->uuid = $this->getUniqueId();
+        $add->username = $this->getNameTag();
+        $add->entityRuntimeId = $this->getId();
+        $add->position = $this->asVector3();
+        $add->motion = $this->getMotion();
+        $add->yaw = $this->yaw;
+        $add->pitch = $this->pitch;
+        $add->item = $this->getItemInHand();
+        $add->metadata = $this->propertyManager->getAll();
+        
+        Server::getInstance()->broadcastPacket($this->getViewers(), $remove);
+        Server::getInstance()->broadcastPacket($this->getViewers(), $add);
     }
 
     public function spawnTo(Player $player) :bool{

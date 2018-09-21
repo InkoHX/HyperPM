@@ -47,6 +47,11 @@ class Main extends PluginBase implements Listener {
             $player->deviceModel = $packet->clientData["DeviceModel"];
             $player->deviceOS = $packet->clientData["DeviceOS"];
         }elseif($packet instanceof InventoryTransactionPacket){
+            if($player->clickTime < 3) {
+                $event->setCancelled();
+                return false;
+            }
+            $player->clickTime = 0;
             $transactionData = $packet->trData;
             if($packet->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY) {
                 $entity = EntityBase::getEntity($player->getLevel(), $transactionData->entityRuntimeId);

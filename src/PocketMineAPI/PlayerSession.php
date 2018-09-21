@@ -29,6 +29,8 @@ class PlayerSession extends Player {
     public $deviceModel;
     public $deviceOS;
 
+    public $clickTick = 0;
+
     public function __construct(Server $server, NetworkSession $session){
         parent::__construct($server, $session);
         $this->offHandInventory = new PlayerOffHandInventory($this);
@@ -36,13 +38,6 @@ class PlayerSession extends Player {
 
     public function getOffHandInventory() : PlayerOffHandInventory{
         return $this->offHandInventory;
-    }
-
-    protected function addDefaultWindows(){
-        parent::addDefaultWindows();
-
-        $this->offHandInventory = new PlayerOffHandInventory($this);
-        $this->addWindow($this->offHandInventory, ContainerIds::OFFHAND, true);
     }
 
     public function sendData($player, ?array $data = \null) : void{
@@ -86,6 +81,18 @@ class PlayerSession extends Player {
         if($this instanceof Player){
             $this->dataPacket($pk);
         }
+    }
+
+    public function onUpdate(int $currentTick) : bool{
+        $this->clickTime++;
+        return parent::onUpdate($currentTick);
+    }
+
+    protected function addDefaultWindows(){
+        parent::addDefaultWindows();
+
+        $this->offHandInventory = new PlayerOffHandInventory($this);
+        $this->addWindow($this->offHandInventory, ContainerIds::OFFHAND, true);
     }
 
     public function getDeviceModel() {

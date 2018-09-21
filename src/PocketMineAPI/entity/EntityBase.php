@@ -15,6 +15,7 @@ use pocketmine\item\Item;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
+use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 
 class EntityBase implements EntityIds{
 
@@ -96,6 +97,14 @@ class EntityBase implements EntityIds{
         return $this->iteminoffhand;
     }
 
+    public function setNameTag(string $name) {
+        $this->propertyManager->setString(Entity::DATA_NAMETAG, $name);
+    }
+
+    public function getNameTag() :string{
+        return $this->propertyManager->getString(Entity::DATA_NAMETAG);
+    }
+
     public function setDataFlag(int $propertyId, int $flagId, bool $value = true, int $propertyType = Entity::DATA_TYPE_LONG){
         if($this->getDataFlag($propertyId, $flagId) !== $value){
             $flags = (int) $this->propertyManager->getPropertyValue($propertyId, $propertyType);
@@ -106,6 +115,13 @@ class EntityBase implements EntityIds{
 
     public function getDataFlag(int $propertyId, int $flagId) :bool{
         return (((int) $this->propertyManager->getPropertyValue($propertyId, -1)) & (1 << $flagId)) > 0;
+    }
+
+    public function updateData() {
+        $pk = new SetEntityDataPacket();
+        $pk->entityRuntimeId = $this->getId();
+        $pk->metadata = $this->propertyManager->getAll();
+        Server::getInstance()->broadcastPacket($this->getViewers(), $pk);
     }
 
     public function spawnToAll() : void{
@@ -137,11 +153,8 @@ class EntityBase implements EntityIds{
         unset($this->hasSpawned[$player->getId()]);
     }
 
-    public function hasSpawned(Player $player) {
-        if(isset($this->hasSpawned[$player->getId()])) {
-            return true;
-        }
-        return false;
+    public function getViewers() :array{
+        return $this->hasSpawned;
     }
 
     public function interact(Player $player) {
