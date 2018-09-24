@@ -84,7 +84,7 @@ class PlayerSession extends Player {
     }
 
     public function onUpdate(int $currentTick) : bool{
-        $this->clickTime++;
+        $this->clickTick++;
         return parent::onUpdate($currentTick);
     }
 
