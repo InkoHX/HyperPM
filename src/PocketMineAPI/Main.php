@@ -47,9 +47,11 @@ class Main extends PluginBase implements Listener {
             $player->deviceModel = $packet->clientData["DeviceModel"];
             $player->deviceOS = $packet->clientData["DeviceOS"];
         }elseif($packet instanceof InventoryTransactionPacket){
-            if($player->clickTick < 3) {
-                $event->setCancelled();
-                return false;
+            if(isset($player->clickTick)) {
+                if($player->clickTick < 3) {
+                    $event->setCancelled();
+                    return false;
+                }
             }
             $player->clickTick = 0;
             $transactionData = $packet->trData;
