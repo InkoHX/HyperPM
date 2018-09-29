@@ -48,17 +48,21 @@ class Main extends PluginBase implements Listener {
             $player->deviceOS = $packet->clientData["DeviceOS"];
         }elseif($packet instanceof InventoryTransactionPacket){
         	$transactionData = $packet->trData;
-            if($player->clickTick < 3) {
-                $event->setCancelled();
-                return false;
-            }
-            $player->clickTick = 0;
-            if($packet->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY) {
-                $entity = EntityBase::getEntity($player->getLevel(), $transactionData->entityRuntimeId);
-                if($entity instanceof EntityBase) {
-                    $entity->interact($player);
-                }
-            }
+        	switch($packet->transactionType) {
+        		case InventoryTransactionPacket::TYPE_USE_ITEM:
+        			if($player->clickTick < 3) {
+        				$event->setCancelled();
+        				return false;
+        			}
+        			$player->clickTick = 0;
+        			break;
+        		case InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY:
+        			$entity = EntityBase::getEntity($player->getLevel(), $transactionData->entityRuntimeId);
+        			if($entity instanceof EntityBase) {
+        				$entity->interact($player);
+        			}
+        			break;
+        	}
         }
     }
 }
