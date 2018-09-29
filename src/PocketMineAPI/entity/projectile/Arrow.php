@@ -33,7 +33,7 @@ class Arrow extends Projectile{
     protected $gravity = 0.04;
     protected $drag = 0.01;
 
-    protected $damage = 2;
+    protected $damage = 1;
 
     protected $particleId = null;
 

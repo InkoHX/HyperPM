@@ -12,7 +12,7 @@ class EntryEntity {
         if($key == null) {
             self::$entry[] = $entity;
         }else{
-            self::$entry[$key] = $entry;
+            self::$entry[$key] = $entity;
         }
     }
 
