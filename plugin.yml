@@ -1,9 +1,0 @@
-name: PMMPAPI
-main: PocketMineAPI\Main
-version: 1.0.0
-api: 3
-load: POSTWORLD
-author: DUSKONG
-
-authors:
-  - InkoHX

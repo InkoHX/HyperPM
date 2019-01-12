@@ -113,7 +113,7 @@ class PlayerBase extends EntityBase
     {
         $pk = new PlayerListPacket();
         $pk->type = PlayerListPacket::TYPE_ADD;
-        $pk->entries = [PlayerListEntry::createAdditionEntry($this->uuid, $this->id, $this->getName(), $this->getName(), 0, $this->skin)];
+        $pk->entries = [PlayerListEntry::createAdditionEntry($this->uuid, $this->id, $this->getName(), $this->getSkin(), 0)];
         $player->dataPacket($pk);
     }
 

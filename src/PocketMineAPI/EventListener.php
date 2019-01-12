@@ -2,32 +2,21 @@
 
 namespace PocketMineAPI;
 
-use pocketmine\plugin\PluginBase;
+use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerCreationEvent;
 use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
-
-use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
-
+use pocketmine\network\mcpe\protocol\LoginPacket;
 use PocketMineAPI\entity\EntityBase;
 use PocketMineAPI\entity\EntryEntity;
 
-class Main extends PluginBase implements Listener
+class EventListener implements Listener
 {
-
-    public const ENABLE_CREATION = true;
-
-    public function onEnable()
-    {
-        $this->getServer()->getPluginManager()->registerEvents($this, $this);
-    }
-
     public function onCreation(PlayerCreationEvent $event)
     {
-        if (self::ENABLE_CREATION) {
+        if (Main::ENABLE_CREATION) {
             $event->setPlayerClass(PlayerSession::class);
         }
     }
@@ -39,7 +28,7 @@ class Main extends PluginBase implements Listener
 
     public function onLevelChange(EntityLevelChangeEvent $event)
     {
-        EntityBase::switchLevel($event);
+        // EntryEntity::switchLevel($event); ???
     }
 
     public function onReceivePacket(DataPacketReceiveEvent $event)

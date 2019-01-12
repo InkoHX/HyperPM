@@ -25,6 +25,7 @@ class EntityBase implements EntityIds
     protected $hasSpawned = [];
 
     protected $id;
+    protected $level;
     protected $pos;
     protected $motion;
 
@@ -34,6 +35,9 @@ class EntityBase implements EntityIds
 
     public $propertyManager;
     public $temporalVector;
+
+    protected $iteminhand;
+    protected $iteminoffhand;
 
     public $name = "";
 
