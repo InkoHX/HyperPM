@@ -1,0 +1,6 @@
+name: HyperPM
+antigen: InkoHX\HyperPM
+description: library
+authors: ['InkoHX', 'DusKong']
+version: 0.0.1-b
+api: 3.5.5
