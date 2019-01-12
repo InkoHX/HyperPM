@@ -1,6 +1,6 @@
 <?php
 
-namespace PocketMineAPI;
+namespace InkoHX;
 
 use pocketmine\Server;
 use pocketmine\Player;

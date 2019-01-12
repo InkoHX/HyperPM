@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace PocketMineAPI\inventory;
+namespace InkoHX\inventory;
 
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\MobEquipmentPacket;

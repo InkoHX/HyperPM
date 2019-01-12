@@ -1,6 +1,6 @@
 <?php
 
-namespace PocketMineAPI\entity\projectile;
+namespace InkoHX\entity\projectile;
 
 use pocketmine\block\Block;
 use pocketmine\entity\Entity;

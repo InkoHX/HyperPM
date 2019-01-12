@@ -1,12 +1,12 @@
 <?php
 
-namespace PocketMineAPI\entity;
+namespace InkoHX\entity;
 
 use pocketmine\Player;
 
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 
-class Creeper extends EntityBase
+class Zombie extends EntityBase
 {
 
     public function spawnTo(Player $player): bool
@@ -14,7 +14,7 @@ class Creeper extends EntityBase
         if (parent::spawnTo($player)) {
             $pk = new AddEntityPacket();
             $pk->entityRuntimeId = $this->getId();
-            $pk->type = self::CREEPER;
+            $pk->type = self::ZOMBIE;
             $pk->position = $this->asVector3();
             $pk->motion = $this->getMotion();
             $pk->pitch = $this->pitch;
@@ -22,6 +22,7 @@ class Creeper extends EntityBase
             $pk->headYaw = $this->headYaw;
             $pk->metadata = $this->propertyManager->getAll();
             $player->dataPacket($pk);
+            return false;
         }
         return true;
     }
