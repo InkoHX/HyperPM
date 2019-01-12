@@ -1,5 +1,5 @@
 name: HyperPM
-antigen: InkoHX\HyperPM
+antigen: InkoHX
 description: library
 authors: ['InkoHX', 'DusKong']
 version: 0.0.1-b
