@@ -3,14 +3,15 @@
 namespace PocketMineAPI\entity;
 
 use pocketmine\Player;
-use pocketmine\level\Position;
 
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 
-class Creeper extends EntityBase {
+class Creeper extends EntityBase
+{
 
-    public function spawnTo(Player $player) :bool{
-        if(parent::spawnTo($player)) {
+    public function spawnTo(Player $player): bool
+    {
+        if (parent::spawnTo($player)) {
             $pk = new AddEntityPacket();
             $pk->entityRuntimeId = $this->getId();
             $pk->type = self::CREEPER;

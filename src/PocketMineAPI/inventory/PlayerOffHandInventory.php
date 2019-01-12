@@ -32,43 +32,51 @@ use pocketmine\Player;
 
 use pocketmine\inventory\BaseInventory;
 
-class PlayerOffHandInventory extends BaseInventory{
+class PlayerOffHandInventory extends BaseInventory
+{
     /** @var Player */
     protected $holder;
 
-    public function __construct(Player $holder){
+    public function __construct(Player $holder)
+    {
         $this->holder = $holder;
         parent::__construct();
     }
 
-    public function getName() : string{
+    public function getName(): string
+    {
         return "OffHand";
     }
 
-    public function getDefaultSize() : int{
+    public function getDefaultSize(): int
+    {
         return 1;
     }
 
-    public function getHolder() : Player{
+    public function getHolder(): Player
+    {
         return $this->holder;
     }
 
-    public function setOffHand(Item $item) : void{
+    public function setOffHand(Item $item): void
+    {
         $this->setItem(0, $item);
     }
 
-    public function setSize(int $size){
+    public function setSize(int $size)
+    {
         throw new \BadMethodCallException("OffHand can only carry one item at a time");
     }
 
-    public function sendSlot(int $index, $target) : void{
-        if($target instanceof Player){
+    public function sendSlot(int $index, $target): void
+    {
+        if ($target instanceof Player) {
             $target = [$target];
         }
 
         /** @var Player[] $target */
 
-        if(($k = array_search($this->holder, $target, true)) !== false){
+        if (($k = array_search($this->holder, $target, true)) !== false) {
             $pk = new InventorySlotPacket();
             $pk->windowId = $target[$k]->getWindowId($this);
             $pk->inventorySlot = $index;
@@ -76,7 +84,7 @@ class PlayerOffHandInventory extends BaseInventory{
             $target[$k]->sendDataPacket($pk);
             unset($target[$k]);
         }
-        if(!empty($target)){
+        if (!empty($target)) {
             $pk = new MobEquipmentPacket();
             $pk->entityRuntimeId = $this->getHolder()->getId();
             $pk->inventorySlot = $pk->hotbarSlot = $this->getItem($index);
@@ -84,19 +92,20 @@ class PlayerOffHandInventory extends BaseInventory{
         }
     }
 
-    public function sendContents($target) : void{
-        if($target instanceof Player){
+    public function sendContents($target): void
+    {
+        if ($target instanceof Player) {
             $target = [$target];
         }
 
-        if(($k = array_search($this->holder, $target, true)) !== false){
+        if (($k = array_search($this->holder, $target, true)) !== false) {
             $pk = new InventoryContentPacket();
             $pk->windowId = $target[$k]->getWindowId($this);
             $pk->items = $this->getContents(true);
             $target[$k]->sendDataPacket($pk);
             unset($target[$k]);
         }
-        if(!empty($target)){
+        if (!empty($target)) {
             $pk = new MobEquipmentPacket();
             $pk->entityRuntimeId = $this->getHolder()->getId();
             $pk->inventorySlot = $pk->hotbarSlot = $this->getItem(0);
@@ -107,7 +116,8 @@ class PlayerOffHandInventory extends BaseInventory{
     /**
      * @return Player[]
      */
-    public function getViewers() : array{
+    public function getViewers(): array
+    {
         return array_merge(parent::getViewers(), $this->holder->getViewers());
     }
 }
